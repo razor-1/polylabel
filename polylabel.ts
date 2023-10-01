@@ -76,7 +76,7 @@ export default function polylabel(polygon: number[][][], precision?: number, deb
     return {position: [bestCell.x, bestCell.y], distance: bestCell.d}
 }
 
-function compareMax(a, b): number {
+function compareMax(a: Cell, b: Cell): number {
     return b.max - a.max;
 }
 
@@ -89,12 +89,13 @@ type Cell = {
 }
 
 function createCell(x: number, y: number, h: number, polygon: number[][][]): Cell {
+    const pointDist = pointToPolygonDist(x, y, polygon)
     return {
         x: x,
         y: y,
         h: h,
-        d: pointToPolygonDist(x, y, polygon),
-        max: this.d + this.h * Math.SQRT2,
+        d: pointDist,
+        max: pointDist + h * Math.SQRT2
     }
 }
 
