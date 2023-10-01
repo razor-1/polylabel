@@ -12,5 +12,4 @@
  * @example
  * var p = polylabel(polygon, 1.0);
  */
-export as namespace polylabel
 export function polylabel(polygon: number[][][], precision?: number, debug?: boolean): number[] & { distance: number };
