@@ -13,7 +13,7 @@
  * var p = polylabel(polygon, 1.0);
  */
 declare module 'polylabel' {
-    function polylabel(polygon: number[][][], precision?: number, debug?: boolean): number[] & {
+    export default function polylabel(polygon: number[][][], precision?: number, debug?: boolean): number[] & {
         distance: number
     };
 }
