@@ -9,6 +9,7 @@ module.exports.default = polylabel;
 
 function polylabel(polygon, precision, debug, centroidWeight) {
     precision = precision || 1.0;
+    centroidWeight = centroidWeight || 0;
 
     // find the bounding box of the outer ring
     var minX, minY, maxX, maxY;
@@ -51,7 +52,7 @@ function polylabel(polygon, precision, debug, centroidWeight) {
         return cell.d - cell.distanceToCentroid * centroidWeight;
     }
 
-    // second guess: bounding box centroid
+    // special case for rectangular polygons
     var bboxCell = new Cell(minX + width / 2, minY + height / 2, 0, polygon, centroidCell);
     if (fitness(bboxCell) > fitness(bestCell)) bestCell = bboxCell;
 
@@ -64,7 +65,7 @@ function polylabel(polygon, precision, debug, centroidWeight) {
         // update the best cell if we found a better one
         if (fitness(cell) > fitness(bestCell)) {
             bestCell = cell;
-            if (debug) console.log('found best %f after %d probes', Math.round(1e4 * cell.d) / 1e4, numProbes);
+            if (debug) console.log('found best %d after %d probes', Math.round(1e4 * cell.d) / 1e4, numProbes);
         }
 
         // do not drill down further if there's no chance of a better solution
@@ -104,15 +105,15 @@ function Cell(x, y, h, polygon, centroidCell) {
 
 // distance between two cells
 function pointToPointDist(cellA, cellB) {
-    const dx = cellB.x - cellA.x;
-    const dy = cellB.y - cellA.y;
+    var dx = cellB.x - cellA.x;
+    var dy = cellB.y - cellA.y;
     return Math.sqrt(dx * dx + dy * dy);
 }
 
 // signed distance from point to polygon outline (negative if point is outside)
 function pointToPolygonDist(x, y, polygon) {
-    let inside = false;
-    let minDistSq = Infinity;
+    var inside = false;
+    var minDistSq = Infinity;
 
     for (var k = 0; k < polygon.length; k++) {
         var ring = polygon[k];
